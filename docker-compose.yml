@@ -1,0 +1,31 @@
+# Start everything:  docker-compose up --build
+# Requires a trained model in ./artifacts (run `python -m src.pipeline` first).
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./artifacts:/app/artifacts:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: dashboard/Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000
+    volumes:
+      - ./artifacts:/app/artifacts:ro
+      - ./docs:/app/docs:ro
+    depends_on:
+      api:
+        condition: service_healthy

@@ -1,0 +1,21 @@
+# environments
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+.env
+.dist/
+
+# data (download from Kaggle)
+data/raw/
+data/processed/
+
+# generated models and tracking
+artifacts/
+mlruns/
+mlflow.db
+
+# OS / editor
+.DS_Store
+.vscode/
